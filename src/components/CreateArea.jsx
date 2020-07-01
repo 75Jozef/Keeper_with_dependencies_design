@@ -1,10 +1,15 @@
 import React, { useState } from "react";
+import Fab from "@material-ui/core/Fab";
+import AddIcon from "@material-ui/icons/Add";
+import Zoom from "@material-ui/core/Zoom";
 
 function CreateArea(props) {
   const [note, setNote] = useState({
     title: "",
     content: ""
   });
+
+  const [isExpanded, setExpanded] = useState(false);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -26,23 +31,38 @@ function CreateArea(props) {
     event.preventDefault();
   }
 
+  function handleZoom() {
+    setExpanded(true);
+  }
+
   return (
     <div>
       <form className="create-note">
-        <input
-          name="title"
-          onChange={handleChange}
-          value={note.title}
-          placeholder="Title"
-        />
+        {isExpanded && (
+          <input
+            name="title"
+            onChange={handleChange}
+            value={note.title}
+            placeholder="Title"
+            autoComplete="Off"
+          />
+        )}
         <textarea
           name="content"
+          onClick={handleZoom}
           onChange={handleChange}
           value={note.content}
           placeholder="Take a note..."
-          rows="3"
+          rows={isExpanded ? 3 : 1}
         />
-        <button onClick={submitNote}>Add</button>
+
+        <Zoom in={isExpanded}>
+          <Fab onClick={submitNote}>
+            <AddIcon />
+          </Fab>
+        </Zoom>
+
+        {/* Fab component som si importoval ako dependency material UI priamo z reactu a tam je Floating action button ako hotový, tak som ho použiť a v ňom som importoval ikonu Add tiež z material UI */}
       </form>
     </div>
   );
